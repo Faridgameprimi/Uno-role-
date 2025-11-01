@@ -1,0 +1,197 @@
+<!doctype html>
+
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Uno Role — Pengira Pusingan</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#06b6d4;--glass:rgba(255,255,255,0.03)}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{background:linear-gradient(180deg,#071023 0%, #091726 100%);color:#e6eef6;display:flex;align-items:center;justify-content:center;padding:20px}
+    .wrap{max-width:920px;width:100%;background:var(--card);border-radius:14px;padding:22px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    h1{margin:0 0 6px;font-size:20px}
+    p.lead{color:var(--muted);margin:0 0 18px}
+    .grid{display:grid;grid-template-columns:320px 1fr;gap:18px}
+    .panel{background:var(--glass);padding:14px;border-radius:10px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    select,input[type=number]{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    .desc{font-size:14px;color:#d9e6f2;line-height:1.35;margin-top:8px}
+    .big{font-size:28px;font-weight:700}
+    .controls{display:flex;gap:8px;align-items:center;margin-top:12px}
+    button{background:var(--accent);color:#042028;border:0;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+    .muted-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+    .status{margin-top:12px;padding:12px;border-radius:8px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent)}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,0.04);font-weight:700}
+    .footer{margin-top:14px;color:var(--muted);font-size:13px}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Uno Role — Pengira Pusingan</h1>
+    <p class="lead">Pilih role pemain dan kira bila skill role itu aktif mengikut pusingan. Sesuai dihos di GitHub Pages (simpan sebagai <code>index.html</code>).</p><div class="grid">
+  <div class="panel">
+    <label for="roleSelect">Pilih Role</label>
+    <select id="roleSelect"></select>
+
+    <div class="desc" id="roleDesc"></div>
+
+    <div style="margin-top:12px">
+      <label for="startRound">Pusingan Semasa (mula dari 0)</label>
+      <input id="startRound" type="number" value="0" min="0" />
+    </div>
+
+    <div class="controls">
+      <button id="advanceBtn">Advance +1 Pusingan</button>
+      <button id="multiAdvance" class="muted-btn">Advance x</button>
+      <input id="multiCount" type="number" value="5" min="1" style="width:80px;padding:8px;border-radius:8px" />
+      <button id="resetBtn" class="muted-btn">Reset</button>
+    </div>
+
+    <div class="status" id="statusBox">
+      <div>Round: <span id="roundNum" class="big">0</span></div>
+      <div style="margin-top:8px">Next Activation: <span id="nextAct" class="badge">-</span></div>
+      <div style="margin-top:8px">Status Skill: <span id="skillStatus" class="badge">Tidak Aktif</span></div>
+    </div>
+
+  </div>
+
+  <div class="panel">
+    <h3>Maklumat Role & Log</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+      <div style="min-width:160px"><strong>Nama Role</strong><div id="showName" class="muted-btn" style="margin-top:6px;background:transparent;border:none;color:var(--muted)"></div></div>
+      <div style="min-width:160px"><strong>Pusingan</strong><div id="showPusingan" style="margin-top:6px" class="badge"></div></div>
+      <div style="min-width:160px"><strong>Skill</strong><div id="showSkill" style="margin-top:6px" class="muted-btn"></div></div>
+    </div>
+
+    <div id="log" style="height:320px;overflow:auto;background:rgba(0,0,0,0.15);padding:10px;border-radius:8px"></div>
+
+    <div class="footer">Cara guna ringkas: Pilih role → tekan <em>Advance</em> untuk tambah pusingan. Aplikasi ini kira bila skill akan aktif (contoh: setiap 3 pusingan). Untuk role tanpa had ("No") skill boleh digunakan bila-bila masa.</div>
+  </div>
+</div>
+
+  </div>  <script>
+    // Data role dari input user (ringkasan)
+    const ROLES = {
+      "Hacker": {p:4,skill:"Bebas letak card apa-apa (card function tidak berfungsi bila dipakai)",note:"Setiap 4 pusingan boleh letak card apa saja."},
+      "Shield": {p:2,skill:"Anti card gimmick (kembalikan gimmick kepada pemberi)",note:"Setiap 2 pusingan kebal terhadap gimmick."},
+      "Nezam": {p:3,skill:"Bakar semua card warna yang sama (satu warna sahaja)",note:"Setiap 3 pusingan boleh buang semua card warna yang sama."},
+      "Mayor": {p:3,skill:"Buang semua card yang disimpan dari musuh (bukan dari deck)",note:"Setiap 3 pusingan boleh keluarkan card yang disimpan."},
+      "Ghoust": {p:5,skill:"Jika sudah menang: kawal card gimmick (ubah ke wild / lain)",note:"Perlu sudah menang dahulu; setiap 5 pusingan boleh gunakan."},
+      "Spammer": {p:1,skill:"Spam buang semua card mengikut warna yang sama",note:"Setiap 1 pusingan boleh buang banyak card warna sama."},
+      "Rewind": {p:2,skill:"Pusingkan balik pusingan sebelumnya (undo)" ,note:"Setiap 2 pusingan boleh undo pusingan sebelumnya."},
+      "Andiko": {p:null,skill:"Copy role pemain lain (no cooldown)",note:"Tiada pusingan — boleh copy bila-bila masa sesuai peraturan."},
+      "Whitejack": {p:2,skill:"Teka card — jika betul buang 4, jika salah ambil 4",note:"Setiap 2 pusingan boleh cuba teka."},
+      "Blackjack": {p:2,skill:"Teka card — jika betul suruh tambah 4, jika salah kamu tambah 4",note:"Setiap 2 pusingan teka+4."},
+      "Purplejack": {p:3,skill:"Teka card — jika betul beri 4 card, jika salah ambil 4",note:"Setiap 3 pusingan teka beri/ambil."},
+      "Bounty": {p:2,skill:"Lock player; jika terkena gimmick, yang dilock kena terima efek",note:"Setiap 2 pusingan boleh lock 1 player."},
+      "Time assasin": {p:10,skill:"Reset semua card player kecuali kamu (kembalikan ke awal)",note:"Setiap 10 pusingan boleh reset hand semua kecuali kamu."},
+      "Phamtom": {p:null,skill:"Jika kamu ada 10 card di tangan kamu boleh menang (no cooldown)",note:"Tiada pusingan — win condition bila 10 card."},
+      "Joker": {p:null,skill:"1 Card Swap — jika ada player lain 1 card, dia wajib swap",note:"Tiada pusingan — dipicu bila syarat tercapai."}
+    };
+
+    const roleSelect = document.getElementById('roleSelect');
+    const roleDesc = document.getElementById('roleDesc');
+    const startRound = document.getElementById('startRound');
+    const roundNum = document.getElementById('roundNum');
+    const nextAct = document.getElementById('nextAct');
+    const skillStatus = document.getElementById('skillStatus');
+    const logBox = document.getElementById('log');
+    const showName = document.getElementById('showName');
+    const showPusingan = document.getElementById('showPusingan');
+    const showSkill = document.getElementById('showSkill');
+
+    // populate select
+    Object.keys(ROLES).forEach(r=>{
+      const o = document.createElement('option'); o.value=r; o.textContent=r; roleSelect.appendChild(o);
+    });
+
+    function renderRole(name){
+      const r = ROLES[name];
+      roleDesc.innerHTML = `<strong>Skill:</strong> ${r.skill}<br><small style=\"color:#9fbcd0\">${r.note}</small>`;
+      showName.textContent = name;
+      showPusingan.textContent = (r.p===null)? 'No / Tiada had' : `${r.p} pusingan`;
+      showSkill.textContent = r.skill;
+      updateStatus();
+    }
+
+    // round state
+    let round = 0;
+
+    function updateStatus(){
+      round = parseInt(startRound.value) || 0;
+      roundNum.textContent = round;
+      const sel = roleSelect.value;
+      const r = ROLES[sel];
+      if (r.p === null){
+        nextAct.textContent = 'Boleh guna bila-bila masa (No)';
+        skillStatus.textContent = 'Sedia (No cooldown)';
+      } else if (r.p === 1){
+        nextAct.textContent = `Aktif setiap pusingan (setiap ${r.p})`;
+        skillStatus.textContent = 'Aktif sekarang';
+      } else {
+        const mod = round % r.p;
+        if (mod === 0 && round !== 0){
+          nextAct.textContent = 'Aktif sekarang';
+          skillStatus.textContent = 'Aktif — boleh guna sekarang';
+        } else {
+          const left = r.p - mod;
+          nextAct.textContent = `Akan aktif dalam ${left} pusingan`;
+          skillStatus.textContent = 'Tidak Aktif';
+        }
+      }
+    }
+
+    // logging
+    function log(msg){
+      const t = document.createElement('div');
+      t.textContent = `[R${round}] ${msg}`;
+      logBox.prepend(t);
+    }
+
+    // events
+    roleSelect.addEventListener('change', ()=>{ renderRole(roleSelect.value); log(`Tukar role ke ${roleSelect.value}`); });
+    startRound.addEventListener('input', ()=>{ updateStatus(); });
+
+    document.getElementById('advanceBtn').addEventListener('click', ()=>{
+      startRound.value = (parseInt(startRound.value)||0) + 1;
+      updateStatus();
+      checkTrigger();
+    });
+
+    document.getElementById('multiAdvance').addEventListener('click', ()=>{
+      const n = Math.max(1, parseInt(document.getElementById('multiCount').value)||1);
+      for(let i=0;i<n;i++){
+        startRound.value = (parseInt(startRound.value)||0) + 1;
+        updateStatus();
+        checkTrigger();
+      }
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      startRound.value = 0; updateStatus(); log('Reset pusingan ke 0');
+    });
+
+    function checkTrigger(){
+      const sel = roleSelect.value; const r = ROLES[sel];
+      if (r.p === null){
+        // no automatic trigger — but still notify
+        log(`${sel} — role tanpa pusingan (gunakan mengikut peraturan).`);
+        return;
+      }
+      if (r.p === 1){
+        log(`${sel} — skill boleh digunakan (aktif setiap pusingan).`);
+      } else if (round !==0 && round % r.p === 0){
+        log(`${sel} — SKILL TERBUKA! (aktif pada pusingan ${round}) — ${r.skill}`);
+      } else {
+        const left = r.p - (round % r.p);
+        log(`${sel} — tidak aktif. Akan aktif dalam ${left} pusingan.`);
+      }
+    }
+
+    // initial
+    roleSelect.value = 'Hacker'; renderRole('Hacker'); updateStatus();
+
+  </script></body>
+</html>
