@@ -1,0 +1,347 @@
+<!DOCTYPE html><html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UNO Role — Dark Purple Premium (By Iman Akid)</title>
+  <meta name="description" content="UNO Role — by Iman Akid." />
+  <style>
+    /* --- Reset & vars --- */
+    :root{
+      --bg-1:#060012; --bg-2:#120026; --glass:rgba(255,255,255,0.04);
+      --muted:#c9bff0; --accent1:#8b5cf6; --accent2:#6b2ce8; --neon:#c88cff; --success:#27d07d;
+      --card-bg:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      --glass-blur:12px;
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;color: #efe7ff}/* --- animated background --- */
+body{
+  background: radial-gradient(circle at 10% 20%, rgba(139,92,246,0.08), transparent 10%),
+             radial-gradient(circle at 80% 80%, rgba(107,44,232,0.06), transparent 10%),
+             linear-gradient(180deg,var(--bg-1),var(--bg-2));
+  overflow-y:auto;
+  -webkit-font-smoothing:antialiased;
+}
+.bg-anim{position:fixed;inset:0;z-index:0;pointer-events:none;mix-blend-mode:screen;opacity:0.45}
+.bg-anim::before{content:'';position:absolute;inset:-20%;background:conic-gradient(from 120deg at 50% 50%, rgba(139,92,246,0.06), rgba(107,44,232,0.06), rgba(200,140,255,0.04));filter:blur(80px);animation:rot 18s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* --- header & nav --- */
+header{position:relative;z-index:5;padding:22px 16px 8px;text-align:center}
+header h1{margin:0;font-size:22px;letter-spacing:0.6px}
+header p{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+nav{display:flex;gap:10px;justify-content:center;padding:10px;position:sticky;top:8px;z-index:6}
+.nav-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);padding:8px 12px;border-radius:12px;cursor:pointer;backdrop-filter:blur(6px)}
+.nav-btn.active{background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#070014;border:none;box-shadow:0 8px 30px rgba(107,44,232,0.12),0 2px 6px rgba(0,0,0,0.6)}
+
+.wrap{max-width:1120px;margin:20px auto;padding:16px;position:relative;z-index:5}
+.page{display:none}
+.page.active{display:block}
+
+/* --- cards & grids --- */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:980px){.grid-3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid-3{grid-template-columns:1fr}}
+
+.card{background:var(--card-bg);border-radius:var(--radius);padding:16px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 40px rgba(4,2,10,0.6);backdrop-filter:blur(var(--glass-blur))}
+.card h3{margin:0;color:var(--neon)}
+.muted{color:var(--muted);font-size:14px}
+
+/* role-list */
+.role-list{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+@media(max-width:780px){.role-list{grid-template-columns:1fr}}
+.role-item{padding:14px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.012), transparent);border:1px solid rgba(255,255,255,0.03);}
+.role-item h4{margin:0 0 8px;color:#f4eaff}
+.role-meta{color:var(--muted);font-size:13px}
+.btn-sm{padding:8px 10px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#070014;cursor:pointer}
+
+/* pusingan grid */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px}
+@media(max-width:980px){.pgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.pgrid{grid-template-columns:1fr}}
+.role-card{padding:14px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.03)}
+.bigcount{font-size:34px;font-weight:800}
+.bar{height:10px;background:rgba(255,255,255,0.03);border-radius:8px;overflow:hidden;margin-top:8px}
+.bar > i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent1),var(--accent2));box-shadow:0 6px 18px rgba(139,92,246,0.16);transition:width .4s ease}
+.action-row{display:flex;gap:8px;margin-top:12px}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:10px;color:var(--muted);cursor:pointer}
+
+/* custom panel */
+.custom-panel{display:grid;grid-template-columns:1fr 320px;gap:14px;margin-top:12px}
+@media(max-width:900px){.custom-panel{grid-template-columns:1fr}}
+.panel-side{padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border:1px solid rgba(255,255,255,0.03)}
+
+select,input[type=number]{padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;width:100%}
+.control-row{display:flex;gap:8px;align-items:center}
+
+/* modal */
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(rgba(2,0,20,0.6),rgba(2,0,20,0.6));z-index:60;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal.show{opacity:1;pointer-events:auto}
+.modal-box{width:100%;max-width:720px;border-radius:12px;padding:18px;background:linear-gradient(180deg,#140024,#24003a);border:1px solid rgba(255,255,255,0.03)}
+
+/* notif */
+.notif{position:fixed;right:18px;bottom:18px;background:linear-gradient(90deg,var(--success),#16a34a);color:#021918;padding:10px 14px;border-radius:10px;box-shadow:0 10px 40px rgba(2,6,23,0.6);display:flex;gap:10px;align-items:center;z-index:70;transform-origin:center;animation:pop .35s ease}
+@keyframes pop{from{transform:scale(0.9);opacity:0} to{transform:scale(1);opacity:1}}
+
+/* skill-ready pulse */
+.pulse{box-shadow:0 0 0 0 rgba(139,92,246,0.35);animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(139,92,246,0.18)}70%{box-shadow:0 0 0 10px rgba(139,92,246,0)}100%{box-shadow:0 0 0 0 rgba(139,92,246,0)}}
+
+footer{margin-top:30px;text-align:center;color:var(--muted);padding:18px}
+
+  </style>
+</head>
+<body>
+  <div class="bg-anim" aria-hidden></div>  <header>
+    <h1>UNO Role</h1>
+    <p>By Iman Akid — Dark Purple Premium</p>
+  </header>  <nav>
+    <button class="nav-btn active" data-nav="lobby">Lobby</button>
+    <button class="nav-btn" data-nav="roles">List Role</button>
+    <button class="nav-btn" data-nav="tutorial">Tutorial</button>
+    <button class="nav-btn" data-nav="pusingan">Pusingan Role</button>
+    <button class="nav-btn" data-nav="custom">Pusingan Custom</button>
+  </nav>  <main class="wrap">
+    <!-- LOBBY -->
+    <section id="lobby" class="page active">
+      <div class="grid-3">
+        <div class="card">
+          <h3>Mula Game</h3>
+          <p class="muted">Buka pengurus pusingan untuk mula sesi atau lihat senarai role dan tutorial.</p>
+          <div style="margin-top:12px"><button class="btn-sm" data-nav="pusingan">Mula Pusingan</button></div>
+        </div><div class="card">
+      <h3>Senarai Role</h3>
+      <p class="muted">Lihat perincian setiap role dan strategi ringkas.</p>
+      <div style="margin-top:12px"><button class="btn-sm" data-nav="roles">Lihat Role</button></div>
+    </div>
+
+    <div class="card">
+      <h3>Tutorial</h3>
+      <p class="muted">Panduan cepat untuk menggunakan sistem pusingan & custom.</p>
+      <div style="margin-top:12px"><button class="btn-sm" data-nav="tutorial">Baca Tutorial</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ROLE LIST -->
+<section id="roles" class="page">
+  <div class="card">
+    <h3>Senarai Role</h3>
+    <p class="muted">Klik Butiran untuk lihat Fungsi Role & Cara Main (popup).</p>
+    <div class="role-list" id="roleList"></div>
+  </div>
+</section>
+
+<!-- TUTORIAL -->
+<section id="tutorial" class="page">
+  <div class="card">
+    <h3>Tutorial & Panduan</h3>
+    <div class="muted" style="margin-top:8px">
+      <ol>
+        <li>Buka <strong>Pusingan Role</strong> untuk urus semua role serentak.</li>
+        <li>Buka <strong>Pusingan Custom</strong> untuk urus satu role pada satu masa.</li>
+        <li>Tekan <strong>+1 Pusingan</strong> selepas setiap pusingan pemain selesai.</li>
+        <li>Apabila cukup pusingan, butang <strong>Gunakan Skill</strong> akan aktif — tekan untuk gunakan.</li>
+        <li>Eksport/Import state membantu simpan sesi permainan.
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- PUSINGAN ALL -->
+<section id="pusingan" class="page">
+  <div class="card">
+    <h3>Pengurus Pusingan (Semua Role)</h3>
+    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+      <button class="btn-sm" id="globalAdd">+1 Global</button>
+      <button class="btn-sm" id="resetAll">Reset Semua</button>
+      <button class="btn-sm" id="exportAll">Export</button>
+    </div>
+
+    <div class="pgrid" id="rolesGrid"></div>
+    <div class="log" id="logAll"></div>
+  </div>
+</section>
+
+<!-- PUSINGAN CUSTOM -->
+<section id="custom" class="page">
+  <div class="custom-panel">
+    <div class="card">
+      <h3>Pusingan Custom — Pilih 1 Role</h3>
+      <p class="muted">Urusk satu role secara fokus. Progress disimpan automatik.</p>
+
+      <div style="margin-top:12px">
+        <select id="customRole"></select>
+      </div>
+
+      <div class="control-row" style="margin-top:12px">
+        <button class="btn-sm" id="cAdd">+1 Pusingan</button>
+        <button class="btn-outline" id="cReset">Reset</button>
+        <button class="btn-sm" id="cUse">Gunakan Skill</button>
+      </div>
+
+      <div style="margin-top:18px">
+        <div class="bigcount" id="cCount">0</div>
+        <div class="bar"><i id="cBar"></i></div>
+        <div class="muted" style="margin-top:10px">Status: <strong id="cStatus">Pilih role</strong></div>
+        <div class="log" id="logCustom" style="margin-top:12px"></div>
+      </div>
+    </div>
+
+    <aside class="panel-side">
+      <h4 id="sideName">Role Detail</h4>
+      <div class="muted" id="sideSkill" style="margin-top:8px"></div>
+      <div class="muted" id="sideFungsi" style="margin-top:12px"></div>
+      <div class="muted" id="sideCara" style="margin-top:12px"></div>
+    </aside>
+  </div>
+</section>
+
+  </main>  <!-- modal -->  <div id="modal" class="modal" role="dialog" aria-hidden="true" onclick="if(event.target.id==='modal') closeModal()">
+    <div class="modal-box" id="modalBox"></div>
+  </div>  <div id="notif" class="notif hidden"><div id="notifText">Skill Ready!</div></div>  <footer>© 2025 UNO Role — By Iman Akid</footer>  <script>
+    /* ===== DATA ===== */
+    const ROLES = [
+      {id:'Hacker', name:'Hacker', skill:'Bebas Letak Card Apa2', p:4, fungsi:'Setiap kali 4 pusingan Kamu dibenarkan Meletak Card apa2 Walaupun Card itu berlainan', cara:'Jika kamu tidak mempunyai card yang player lain letak, kamu bebas meletak card apa yang kamu nak selepas 4 pusingan, Card Function Tidak berfungsi Ketika Di letak'},
+      {id:'Shield', name:'Shield', skill:'Anti Card Gimmick', p:2, fungsi:'Setiap kali 2 pusingan Kamu akan kebal terhadap card gimmik, Contohnya +2, +4, +6, +10, Dan lain, Jika ada yang menggunakan card gimmik ke kamu, Gimmik tersebut akan diberi kembali ke Player yang meletak card tersebut', cara:'Jika kamu tidak ingin menambah card tambah, kamu boleh menggunakan skill ini untuk mengcounter balik musuh'},
+      {id:'Nezam', name:'Nezam', skill:'Bakar Card Mengikut warna', p:3, fungsi:'Setiap kali 3 pusingan kamu dapat membuang Semua Card Warna Yang sama, tidak untuk card yang nombor sama, Hanya Boleh membuat satu warna dalam 3 pusingan', cara:'Buat cadangan Untuk Menyimpan Card Yang Kamu dapat dari musuh, Main role ini harus banyak bersabar kerana diakhir2 kamu dapat membakar semua berwarna sama, Kamu harus asingkan card yang dapat dari card tambah atau card yang dapat dari desk'},
+      {id:'Mayor', name:'Mayor', skill:'Simpan dan buang Card', p:3, fungsi:'Setiap kali 3 pusingan Kamu dapat membuang Semua card yang kamu simpan sebelum ini yang kamu dapat dari card gimmik tak termasuk yang kamu ambik di Desk card', cara:'Role ini perlu kesabaran yang tinggi, kamu perlu membuat rancangan untuk menang menggunakan role ini, Kamu perlu belajar menyimpan card yang didapatkan dari musuh dan asingkan yang dapat card dari desk, akhirnya habiskan semua card kamu yang tidak dapat dari musuh lalu buang semua card yang kamu dapat dari musuh supaya kamu boleh menang'},
+      {id:'Ghoust', name:'Ghoust', skill:'Mengontrol Card gimmick mengikut suka hati setelah Menang', p:5, fungsi:'Kalau kamu sudah menang setiap kali 5 pusingan kamu akan dapat mengontrol card gimmik, contohnya Jika orang letak card gimmik +2, kamu Boleh mengubahnya jadi wild card atau card gimmick lainnya', cara:'Role ini Lebih ke troll role, sebab kamu Harus menang baru dapat menggunakan role ini, role ini memang cukup op, Untuk role ini main je macam biasa'},
+      {id:'Spammer', name:'Spammer', skill:'Spam Card Mengikut warna yang sama', p:1, fungsi:'Setiap kali 1 pusingan kamu dapat meletakkan semua card kamu mengikut warna yang sama', cara:'Role nih memang sesuai untuk Orang yang nak menang cepat, Caranya Setiap pusingan buang card berwarna yang paling banyak kamu ada, tapi ingat card gimmik tak berfungsi'},
+      {id:'Rewind', name:'Rewind', skill:'pusingkan waktu kesebelumnya', p:2, fungsi:'Setiap kali 2 pusingan kamu dapat pusingkan waktu kepada sebelumnya, contohnya Setiap card yang kamu letak di satu pusingan itu haruslah di kembalikan seperti semula di awal pusingan, Maksud awal pusingan tu setiap habis pusingan orang tersebut dia harus memberi kembali seperti yang awal2 pusingan', cara:'Role ini dipakai waktu kamu melakukan kesalahan atau tersalah letak card, sebab role ini akan membalikkan waktu seperti awal pusingan, Memang sedikit susah untuk memahami role ini'},
+      {id:'Andiko', name:'Andiko', skill:'Copy Role', p:null, fungsi:'Kamu dapat copy role card player lain dan main mengikut Skill role meraka', cara:'Kamu pilih role yang menurut kamu Boleh menang, sebab role ini hanya copy Role dari player lain'},
+      {id:'Whitejack', name:'Whitejack', skill:'Teka Card Dan Buang Card', p:2, fungsi:'Setiap kali 2 pusingan kamu dapat Teka card player lain jika betul kamu boleh membuang 4 card kamu jika salah kamu harus mengambil 4 card di desk', cara:'Role nih kena banyak menghafal card player, sebab role ini berguna waktu tukar card dengan player kerana kamu tahu card apa yang musuh ada, Role nih kena hafal card'},
+      {id:'Blackjack', name:'Blackjack', skill:'Teka card dan tambah card', p:2, fungsi:'Setiap kali 2 pusingan kamu dapat Teka card player lain jika betul Suruh player tersebut tambah 4 card yang ada di desk, jika salah kamu yang harus tambah 4 card yang ada di desk', cara:'Role nih pun sama dengan whitejack kena banyak menghafal card player, sebab role ini berguna waktu tukar card dengan player kerana kamu tahu card apa yang musuh ada, Role nih kena hafal card, Bezanya role ini menambahkan card musuh bukan mengurangkan kamu'},
+      {id:'Purplejack', name:'Purplejack', skill:'Teka Card Dan beri card', p:3, fungsi:'Setiap kali 3 pusingan kamu dapat Teka card player lain jika betul kamu dapat memberi 4 card kamu kepada player lain, jika salah kamu yang harus mengambil 4 card kepada player lain', cara:'Role nih gabungan dari whitejack dan blackjack sama je kena banyak menghafal card player, sebab role ini berguna waktu tukar card dengan player kerana kamu tahu card apa yang musuh ada, Role nih kena hafal card'},
+      {id:'Bounty', name:'Bounty', skill:'Lock Player Dan tambahkan Card', p:2, fungsi:'Setiap kali 2 pusingan Kamu dapat lock 1 player sehingga masuk pusingan seterusnya, Skillnya aktif apa bila Player atau kamu menggunakan Card gimmick player yang dilock terkena card tersebut', cara:'Role ini bagus buat kamu Yang Dalam kondisi uno card, Kerana dapat mengelak dari tambah card, Kamu kena Lock player yang ada card sikit, sebab role ini sangat berguna'},
+      {id:'Time assasin', name:'Time assasin', skill:'Ulang card dari awal kecuali kamu', p:10, fungsi:'Setiap kali 10 pusingan kamu dapat mereset semua card player kecuali kamu, maksudnya Semua card reset dan diberi seperti awal mula main kecuali kamu', cara:'Main role nih Kena banyak bersabar, Reset card waktu Card Dorang dah start sikit, Kalau card dorang banyak, jangan reset sebab itu akan merugikan'},
+      {id:'Phamtom', name:'Phamtom', skill:'Ada 10Card Menang', p:null, fungsi:'Jika Kamu ada 10 card di tangan Kamu boleh Menang, jika lebih atau kurang, Kamu Tidak akan menang', cara:'Main role nih kena pandai, jangan sampai musuh Bagi card tambah, sebab tu terlalu susah untuk menang, Ingat Jangan lebih jangan kurang, Main role nih jawap bawak ke akhir game sebab dia akan jadi susah, Start game je, cari card banyak2 sampai 10'},
+      {id:'Joker', name:'Joker', skill:'1 Card Swap', p:null, fungsi:'Jika Ada player lain mempunyai 1 card, Player tersebut harus swap card Ke kamu', cara:'Role nih sedikit enoying, dan kamu boleh cepat menang main role ini, tapi ingat musuh tetap boleh bagi card tambah'}
+    ];
+
+    /* ===== STORAGE KEYS ===== */
+    const KEY_ALL = 'uno_role_v3_all';
+    const KEY_CUSTOM = 'uno_role_v3_custom';
+
+    /* ===== STATE ===== */
+    let stateAll = {};
+    let stateCustom = {role:null, round:0};
+
+    /* ===== UI Refs ===== */
+    const pages = document.querySelectorAll('.page');
+    const navs = document.querySelectorAll('[data-nav]');
+    const roleListEl = document.getElementById('roleList');
+    const rolesGrid = document.getElementById('rolesGrid');
+    const logAll = document.getElementById('logAll');
+
+    const customRoleSel = document.getElementById('customRole');
+    const cCount = document.getElementById('cCount');
+    const cBar = document.getElementById('cBar');
+    const cStatus = document.getElementById('cStatus');
+    const logCustom = document.getElementById('logCustom');
+
+    const sideName = document.getElementById('sideName');
+    const sideSkill = document.getElementById('sideSkill');
+    const sideFungsi = document.getElementById('sideFungsi');
+    const sideCara = document.getElementById('sideCara');
+
+    const modal = document.getElementById('modal');
+    const modalBox = document.getElementById('modalBox');
+    const notif = document.getElementById('notif');
+    const notifText = document.getElementById('notifText');
+
+    /* ===== NAV ===== */
+    navs.forEach(btn=>btn.addEventListener('click', ()=>{ const id = btn.getAttribute('data-nav'); showPage(id); navs.forEach(n=>n.classList.remove('active')); btn.classList.add('active'); }));
+    function showPage(id){ pages.forEach(p=>p.classList.remove('active')); const el = document.getElementById(id); if(el) el.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+
+    /* ===== Load / Save ===== */
+    function load(){
+      const raw = localStorage.getItem(KEY_ALL);
+      if(raw){ try{ stateAll = JSON.parse(raw); }catch(e){ stateAll = {}; }}
+      ROLES.forEach(r=>{ if(!stateAll[r.id]) stateAll[r.id] = {round:0,used:false}; });
+      const raw2 = localStorage.getItem(KEY_CUSTOM);
+      if(raw2){ try{ stateCustom = JSON.parse(raw2); }catch(e){ stateCustom = {role:null,round:0}; }}
+      save(); saveCustom();
+    }
+    function save(){ localStorage.setItem(KEY_ALL, JSON.stringify(stateAll)); }
+    function saveCustom(){ localStorage.setItem(KEY_CUSTOM, JSON.stringify(stateCustom)); }
+
+    /* ===== Render role list ===== */
+    function renderRoleList(){ roleListEl.innerHTML = '';
+      ROLES.forEach(r=>{
+        const el = document.createElement('div'); el.className='role-item';
+        el.innerHTML = `<h4>${r.name} <span class="role-meta">${r.p===null? 'No' : r.p+'x'}</span></h4>
+                        <div class="role-meta"><strong>Skill:</strong> ${r.skill}</div>
+                        <div style="height:8px"></div>
+                        <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn-sm" onclick="openModal('${r.id}')">Butiran</button></div>`;
+        roleListEl.appendChild(el);
+      });
+    }
+
+    function openModal(id){ const r = ROLES.find(x=>x.id===id); if(!r) return; modalBox.innerHTML = `<h3 style="margin-top:0">${r.name}</h3><p class="muted"><strong>Skill:</strong> ${r.skill}</p><p class="muted"><strong>Pusingan:</strong> ${r.p===null? 'No' : r.p+'x'}</p><hr><p class="muted"><strong>Fungsi Role:</strong> ${r.fungsi}</p><p class="muted" style="margin-top:8px"><strong>Cara Main:</strong> ${r.cara}</p><div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn-sm" onclick="closeModal()">Tutup</button></div>`; modal.classList.add('show'); }
+    function closeModal(){ modal.classList.remove('show'); }
+
+    /* ===== Render ALL grid ===== */
+    function createCardAll(r){
+      const card = document.createElement('div'); card.className='role-card';
+      card.innerHTML = `<h4 style="margin:0 0 6px">${r.name} <span style="font-size:12px;color:var(--muted);">${r.p===null? 'No' : r.p+'x'}</span></h4>
+                        <div class="muted">${r.skill}</div>
+                        <div style="height:6px"></div>
+                        <div class="bigcount" id="all_count_${r.id}">0</div>
+                        <div class="bar"><i id="all_bar_${r.id}"></i></div>
+                        <div class="action-row"><button class="btn-sm" id="add_all_${r.id}">+1 Pusingan</button><button class="btn-outline" id="use_all_${r.id}">Gunakan Skill</button></div>`;
+      return card;
+    }
+
+    function renderAllGrid(){ rolesGrid.innerHTML=''; ROLES.forEach(r=>{ const card = createCardAll(r); rolesGrid.appendChild(card); document.getElementById(`add_all_${r.id}`).addEventListener('click', ()=>{ stateAll[r.id].round++; stateAll[r.id].used=false; save(); updateAllCard(r); logAll(`${r.name} +1 → R${stateAll[r.id].round}`); checkReadyAll(r); }); document.getElementById(`use_all_${r.id}`).addEventListener('click', ()=>{ if(!ready(r, stateAll[r.id].round)) return alert('Skill belum ready'); logAll(`SKILL USED: ${r.name} (R${stateAll[r.id].round})`); stateAll[r.id].round=0; stateAll[r.id].used=true; save(); updateAllCard(r); notify(`${r.name} used skill`); }); }); updateAllCards(); }
+    function updateAllCards(){ ROLES.forEach(updateAllCard); }
+    function updateAllCard(r){ const elCount = document.getElementById(`all_count_${r.id}`); const elBar = document.getElementById(`all_bar_${r.id}`); if(!elCount) return; const s = stateAll[r.id]; elCount.textContent = s.round; if(r.p===null){ elBar.style.width = '100%'; } else { const pct = Math.min(100, Math.round((s.round % r.p)/r.p*100)); elBar.style.width = pct + '%'; } if(ready(r,s.round)) elCount.classList.add('pulse'); else elCount.classList.remove('pulse'); }
+
+    function ready(r,round){ if(r.p===null) return true; if(round===0) return false; return (round % r.p === 0); }
+
+    function logAll(msg){ const t = new Date().toLocaleTimeString(); const d = document.createElement('div'); d.className='entry'; d.textContent = `[${t}] ${msg}`; logAll.prepend(d); }
+
+    function checkReadyAll(r){ if(ready(r,stateAll[r.id].round)){ notify(`${r.name} SKILL READY!`); logAll(`${r.name} SKILL READY pada R${stateAll[r.id].round}`); } }
+
+    /* ===== CUSTOM page ===== */
+    function populateCustom(){ customRoleSel.innerHTML = ''; const opt = document.createElement('option'); opt.value=''; opt.text='-- Pilih Role --'; customRoleSel.appendChild(opt); ROLES.forEach(r=>{ const o = document.createElement('option'); o.value=r.id; o.text = `${r.name} ${r.p===null? '(No)': '('+r.p+'x)'} `; customRoleSel.appendChild(o); }); if(stateCustom.role) customRoleSel.value = stateCustom.role; updateCustom(); }
+
+    function updateCustom(){ const sel = customRoleSel.value; if(!sel){ cCount.textContent = 0; cBar.style.width = '0%'; cStatus.textContent = 'Pilih role'; sideName.textContent = 'Role Detail'; sideSkill.textContent=''; sideFungsi.textContent=''; sideCara.textContent=''; return; } const role = ROLES.find(x=>x.id===sel); sideName.textContent = role.name; sideSkill.innerHTML = `<strong>Skill:</strong> ${role.skill}`; sideFungsi.innerHTML = `<strong>Fungsi Role:</strong> ${role.fungsi}`; sideCara.innerHTML = `<strong>Cara Main:</strong> ${role.cara}`;
+      // load round from custom if same role or fall back to global
+      let round = (stateCustom.role===sel) ? stateCustom.round : stateAll[sel] ? stateAll[sel].round : 0;
+      cCount.textContent = round; if(role.p===null){ cBar.style.width='100%'; cStatus.textContent = 'Boleh guna (No cooldown)'; } else { const pct = Math.min(100, Math.round((round % role.p)/role.p*100)); cBar.style.width = pct + '%'; if(ready(role,round)) cStatus.textContent = 'Skill Ready!'; else { const left = role.p - (round % role.p || 0); cStatus.textContent = `Aktif dalam ${left} pusingan`; } }
+    }
+
+    document.getElementById('cAdd').addEventListener('click', ()=>{
+      const sel = customRoleSel.value; if(!sel) return alert('Pilih role dahulu'); if(stateCustom.role && stateCustom.role!==sel){ // push old custom to global
+        stateAll[stateCustom.role].round = stateCustom.round; stateCustom.round = stateAll[sel].round || 0; stateCustom.role = sel; }
+      else stateCustom.role = sel; stateCustom.round = (stateCustom.round||0) + 1; saveCustom(); updateCustom(); logCustom(`${sel} +1 → R${stateCustom.round}`); checkReadyCustom(); });
+
+    document.getElementById('cReset').addEventListener('click', ()=>{ if(!confirm('Reset pusingan custom ke 0?')) return; stateCustom.round = 0; saveCustom(); updateCustom(); logCustom('Custom reset ke 0'); });
+
+    document.getElementById('cUse').addEventListener('click', ()=>{ const sel = customRoleSel.value; if(!sel) return alert('Pilih role dahulu'); const role = ROLES.find(x=>x.id===sel); const round = stateCustom.round||0; if(!ready(role,round)) return alert('Skill belum ready'); logCustom(`SKILL DIGUNAKAN: ${role.name} (R${round})`); stateCustom.round = 0; saveCustom(); updateCustom(); notify(`${role.name} gunakan skill`); });
+
+    customRoleSel.addEventListener('change', ()=>{ const sel = customRoleSel.value; if(!sel) return updateCustom(); // load round from global by default
+      stateCustom.role = sel; stateCustom.round = stateAll[sel]?.round || stateCustom.round || 0; saveCustom(); updateCustom(); });
+
+    function logCustom(msg){ const t = new Date().toLocaleTimeString(); const d = document.createElement('div'); d.className='entry'; d.textContent = `[${t}] ${msg}`; logCustom.prepend(d); }
+
+    /* ===== EXPORT / GLOBAL HANDLERS ===== */
+    document.getElementById('globalAdd').addEventListener('click', ()=>{ ROLES.forEach(r=>{ stateAll[r.id].round++; stateAll[r.id].used=false; }); save(); updateAllCards(); logAll('Global +1 untuk semua role'); ROLES.forEach(checkReadyAll); });
+    document.getElementById('resetAll').addEventListener('click', ()=>{ if(!confirm('Reset semua pusingan?')) return; ROLES.forEach(r=>{ stateAll[r.id].round=0; stateAll[r.id].used=false; }); save(); updateAllCards(); logAll('Semua pusingan direset ke 0'); });
+    document.getElementById('exportAll').addEventListener('click', ()=>{ const data = {all:stateAll, custom:stateCustom}; const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='uno-role-session.json'; a.click(); URL.revokeObjectURL(url); });
+
+    /* ===== Notifications ===== */
+    let notifTimer = null;
+    function notify(txt){ notifText.textContent = txt; notif.classList.remove('hidden'); clearTimeout(notifTimer); notifTimer = setTimeout(()=>{ notif.classList.add('hidden'); },3800); }
+
+    /* ===== init ===== */
+    load(); renderRoleList(); renderAllGrid(); populateCustom(); // attach nav inside cards
+    document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click', ()=>{ showPage(b.getAttribute('data-nav')); }));
+    setInterval(()=>{ save(); saveCustom(); },3000);
+
+    // keyboard shortcut: G -> global add
+    window.addEventListener('keydown',(e)=>{ if(e.key.toLowerCase()==='g'){ document.getElementById('globalAdd').click(); } });
+  </script></body>
+</html>
