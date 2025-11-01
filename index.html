@@ -1,0 +1,249 @@
+<!doctype html>
+
+<html lang="ms">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Uno Role — Lobby & Pengurus Pusingan</title>
+  <style>
+    :root{--bg:#07101a;--card:#0b1220;--muted:#9aa4b2;--accent:#56ccf2;--accent-2:#7c3aed;--glass:rgba(255,255,255,0.03);--success:#22c55e}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{background:linear-gradient(180deg,#05060a 0%, #07101a 100%);color:#e6eef6;display:flex;flex-direction:column;align-items:center;padding:18px}
+    .app{width:100%;max-width:1100px}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+h1{font-size:20px;margin:0}
+.subtitle{color:var(--muted);font-size:13px}
+
+.nav{display:flex;gap:10px}
+.btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:0;padding:8px 12px;border-radius:10px;color:#021018;font-weight:700;cursor:pointer}
+.muted{background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--muted);padding:8px 10px;border-radius:10px}
+
+/* lobby */
+.lobby{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:980px){.lobby{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.lobby{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:16px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);min-height:170px;display:flex;flex-direction:column;gap:10px}
+.card h3{margin:0;display:flex;align-items:center;justify-content:space-between}
+.muted-t{color:var(--muted);font-size:13px}
+
+/* content pages */
+.page{display:none}
+.page.active{display:block}
+
+/* roles list */
+.role-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}
+@media(max-width:700px){.role-list{grid-template-columns:1fr}}
+.role-item{padding:10px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+.role-item h4{margin:0 0 6px}
+.small{font-size:13px;color:var(--muted)}
+
+/* pusingan area reuse */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px}
+@media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+
+.bignum{font-size:28px;font-weight:800}
+.bar{height:8px;background:rgba(255,255,255,0.04);border-radius:6px;overflow:hidden}
+.bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%;transition:width .35s ease}
+
+.log{margin-top:16px;background:rgba(0,0,0,0.16);padding:12px;border-radius:10px;height:220px;overflow:auto;border:1px solid rgba(255,255,255,0.02)}
+.log .entry{font-size:13px;margin-bottom:6px}
+
+.footer{margin-top:12px;color:var(--muted);font-size:13px}
+
+.action-row{margin-top:auto;display:flex;gap:8px}
+.btn-outline{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:8px;color:var(--muted);cursor:pointer}
+
+.notif{position:fixed;right:18px;bottom:18px;background:linear-gradient(90deg,var(--success),#16a34a);color:#021018;padding:10px 12px;border-radius:10px;box-shadow:0 8px 30px rgba(2,6,23,0.6);display:flex;gap:10px;align-items:center}
+.hidden{display:none}
+
+.back{margin-top:12px}
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Uno Role</h1>
+        <div class="subtitle">Lobby · Senarai Role · Tutorial · Pengurus Pusingan</div>
+      </div>
+      <div class="nav">
+        <button class="btn" data-nav="lobby">Lobby</button>
+        <button class="muted" data-nav="roles">List Role</button>
+        <button class="muted" data-nav="tutorial">Tutorial</button>
+        <button class="muted" data-nav="pusingan">Pusingan Role</button>
+      </div>
+    </header><!-- LOBBY -->
+<section id="lobby" class="page active">
+  <div class="lobby">
+    <div class="card">
+      <h3>Mulakan Game <span class="muted-t">(Start)</span></h3>
+      <p class="muted-t">Bina meja permainan UNO Role kamu. Tekan "Pusingan Role" untuk mula mengurus pusingan.</p>
+      <div style="margin-top:auto"><button class="btn" data-nav="pusingan">Buka Pusingan Role</button></div>
+    </div>
+
+    <div class="card">
+      <h3>Senarai Role <span class="muted-t">(Info)</span></h3>
+      <p class="muted-t">Lihat semua role & penerangan skill. Sesuai untuk belajar peranan.</p>
+      <div style="margin-top:auto"><button class="btn" data-nav="roles">Lihat Role</button></div>
+    </div>
+
+    <div class="card">
+      <h3>Tutorial <span class="muted-t">(Cara)</span></h3>
+      <p class="muted-t">Langkah cara main, guna skill, dan tips strategi.</p>
+      <div style="margin-top:auto"><button class="btn" data-nav="tutorial">Baca Tutorial</button></div>
+    </div>
+  </div>
+
+  <div class="footer">Tip: Gunakan sidebar (atas) untuk navigasi. Semua data disimpan di browser (localStorage).</div>
+</section>
+
+<!-- ROLES LIST -->
+<section id="roles" class="page">
+  <div class="card">
+    <h3>Senarai Role</h3>
+    <p class="muted-t">Klik mana-mana role untuk lihat butiran lengkap dan contoh cara guna.</p>
+    <div class="role-list" id="roleList"></div>
+    <div class="back"><button class="muted" data-nav="lobby">← Kembali ke Lobby</button></div>
+  </div>
+</section>
+
+<!-- TUTORIAL -->
+<section id="tutorial" class="page">
+  <div class="card">
+    <h3>Tutorial & Panduan</h3>
+    <div class="small" style="margin-top:8px">
+      <h4>Cara guna laman ini</h4>
+      <ol>
+        <li>Buka <strong>Pusingan Role</strong> untuk mula kira pusingan setiap role.</li>
+        <li>Gunakan <strong>+1 Pusingan</strong> pada role tertentu setelah pusingan pemain selesai.</li>
+        <li>Apabila role cukup pusingan (contoh: setiap 3 pusingan), butang <strong>Gunakan Skill</strong> akan aktif. Tekan untuk gunakan skill — ini akan reset pusingan role ke 0 dan logkan tindakan.</li>
+        <li>Gunakan <strong>+1 Global</strong> untuk tambah pusingan semua role serentak (cepat untuk ujian).</li>
+        <li>Eksport/Import state untuk simpan atau kongsi konfigurasi session.</li>
+      </ol>
+
+      <h4>Tips strategi ringkas</h4>
+      <ul>
+        <li>Perhatikan role seperti <em>Phamtom</em> (mencari 10 card) atau <em>Joker</em> — mereka tidak bergantung pada pusingan.</li>
+        <li>Role seperti <em>Shield</em> bagus untuk melawan gimmick; koordinasi dengan urutan main boleh membuat perbezaan.</li>
+        <li>Amalkan simpan log untuk rujukan bila sesi panjang.</li>
+      </ul>
+    </div>
+    <div class="back"><button class="muted" data-nav="lobby">← Kembali ke Lobby</button></div>
+  </div>
+</section>
+
+<!-- PUSINGAN ROLE (integrated manager) -->
+<section id="pusingan" class="page">
+  <div class="card">
+    <h3>Pengurus Pusingan</h3>
+    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;align-items:center">
+      <button class="btn" id="addGlobal">+1 Global</button>
+      <button class="muted" id="resetAll">Reset Semua</button>
+      <button class="muted" id="exportBtn">Export</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none" />
+    </div>
+
+    <div class="grid" id="rolesGrid"></div>
+
+    <div class="log" id="log"></div>
+    <div class="back"><button class="muted" data-nav="lobby">← Kembali ke Lobby</button></div>
+  </div>
+</section>
+
+  </div>  <div id="notif" class="notif hidden"><div id="notifText">Skill Ready!</div><div id="notifClose" style="cursor:pointer;font-weight:700">✕</div></div>  <script>
+    // same role data
+    const ROLES = [
+      {id:'Hacker', p:4, skill:'Bebas letak card apa-apa (card function tidak berfungsi bila dipakai)'},
+      {id:'Shield', p:2, skill:'Anti card gimmick (kembalikan gimmick kepada pemberi)'},
+      {id:'Nezam', p:3, skill:'Bakar semua card warna yang sama (satu warna sahaja)'},
+      {id:'Mayor', p:3, skill:'Buang semua card yang disimpan dari musuh (bukan dari deck)'},
+      {id:'Ghoust', p:5, skill:'Jika sudah menang: kawal card gimmick (ubah ke wild / lain)'},
+      {id:'Spammer', p:1, skill:'Spam buang semua card mengikut warna yang sama'},
+      {id:'Rewind', p:2, skill:'Pusingkan balik pusingan sebelumnya (undo)'},
+      {id:'Andiko', p:null, skill:'Copy role pemain lain (no cooldown)'},
+      {id:'Whitejack', p:2, skill:'Teka card — jika betul buang 4, jika salah ambil 4'},
+      {id:'Blackjack', p:2, skill:'Teka card — jika betul suruh tambah 4, jika salah kamu tambah 4'},
+      {id:'Purplejack', p:3, skill:'Teka card — jika betul beri 4 card, jika salah ambil 4'},
+      {id:'Bounty', p:2, skill:'Lock player; jika terkena gimmick, yang dilock kena terima efek'},
+      {id:'Time assasin', p:10, skill:'Reset semua card player kecuali kamu (kembalikan ke awal)'},
+      {id:'Phamtom', p:null, skill:'Jika kamu ada 10 card di tangan kamu boleh menang (no cooldown)'},
+      {id:'Joker', p:null, skill:'1 Card Swap — jika ada player lain 1 card, dia wajib swap'}
+    ];
+
+    const STORAGE_KEY = 'uno_role_state_v1';
+    let state = {};
+
+    // elements
+    const pages = document.querySelectorAll('.page');
+    const navBtns = document.querySelectorAll('[data-nav]');
+    const roleListEl = document.getElementById('roleList');
+    const rolesGrid = document.getElementById('rolesGrid');
+    const logEl = document.getElementById('log');
+    const notif = document.getElementById('notif');
+    const notifText = document.getElementById('notifText');
+    const notifClose = document.getElementById('notifClose');
+
+    // NAV
+    navBtns.forEach(b=>b.addEventListener('click', ()=>{ const target = b.getAttribute('data-nav'); showPage(target);}));
+    function showPage(id){ pages.forEach(p=>p.classList.remove('active')); const el = document.getElementById(id); if(el) el.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+
+    // load state
+    function load(){ const raw = localStorage.getItem(STORAGE_KEY); if(raw){ try{ state = JSON.parse(raw);}catch(e){ state={}; }} ROLES.forEach(r=>{ if(!state[r.id]) state[r.id] = {round:0,used:false}; }); save(); }
+    function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+    // render roles list (info)
+    function renderRoleList(){ roleListEl.innerHTML=''; ROLES.forEach(r=>{ const d = document.createElement('div'); d.className='role-item'; d.innerHTML = `<h4>${r.id} <span class="small">${r.p===null? 'No' : r.p+' pusingan'}</span></h4><div class="small">${r.skill}</div><div style="margin-top:8px"><button class="muted" onclick="showRoleDetail('${r.id}')">Butiran</button></div>`; roleListEl.appendChild(d);} ); }
+    window.showRoleDetail = function(id){ const r = ROLES.find(x=>x.id===id); if(!r) return alert('Role tidak ditemui'); alert(`${r.id}
+Pusingan: ${r.p===null? 'No' : r.p}
+Skill: ${r.skill}`); }
+
+    // create pusingan cards
+    function createCard(r){
+      const card = document.createElement('div'); card.className='card';
+      const title = document.createElement('h3'); title.innerHTML = `${r.id} <span class="muted-t">${r.p===null? 'No' : r.p+' pusingan'}</span>`;
+      const skill = document.createElement('div'); skill.className='muted-t'; skill.textContent = r.skill;
+      const counter = document.createElement('div'); counter.className='bignum'; counter.id = `cnt_${r.id}`;
+      const bar = document.createElement('div'); bar.className='bar'; bar.innerHTML = '<i id="bar_'+r.id+'"></i>';
+
+      const actions = document.createElement('div'); actions.className='action-row';
+      const btnAdd = document.createElement('button'); btnAdd.textContent = '+1 Pusingan'; btnAdd.className='btn-outline';
+      const btnUse = document.createElement('button'); btnUse.textContent = 'Gunakan Skill'; btnUse.className='btn-outline'; btnUse.disabled=true;
+
+      btnAdd.addEventListener('click', ()=>{ state[r.id].round +=1; state[r.id].used=false; save(); updateCard(r); log(`+1 pusingan untuk ${r.id} → R${state[r.id].round}`); checkNotify(r); });
+      btnUse.addEventListener('click', ()=>{ if(!isSkillReady(r)) return alert('Skill belum ready'); log(`SKILL DIGUNAKAN: ${r.id} (R${state[r.id].round})`); state[r.id].round=0; state[r.id].used=true; save(); updateCard(r); showNotification(`${r.id} gunakan skill!`); });
+
+      actions.appendChild(btnAdd); actions.appendChild(btnUse);
+      card.appendChild(title); card.appendChild(skill); card.appendChild(counter); card.appendChild(bar); card.appendChild(actions);
+      return {card, counter, barEl: bar.querySelector('i'), btnAdd, btnUse};
+    }
+
+    function renderPusingan(){ rolesGrid.innerHTML=''; ROLES.forEach(r=>{ const {card, counter, barEl, btnAdd, btnUse} = createCard(r); rolesGrid.appendChild(card); state[r.id].el = {counter:document.getElementById(`cnt_${r.id}`), bar: document.getElementById('bar_'+r.id), btnAdd, btnUse}; updateCard(r); }); }
+
+    function isSkillReady(r){ const s = state[r.id]; if(r.p===null) return true; if(s.round===0) return false; return (s.round % r.p === 0); }
+
+    function updateCard(r){ const s = state[r.id]; const el = s.el; if(!el) return; el.counter.textContent = s.round; if(r.p===null){ el.bar.style.width='100%'; } else { const pct = Math.min(100, Math.round((s.round % r.p) / r.p * 100)); el.bar.style.width = pct + '%'; }
+      if(isSkillReady(r)){ el.btnUse.disabled=false; el.btnUse.style.opacity=1; el.btnUse.style.background='linear-gradient(90deg,var(--accent),var(--accent-2))'; el.counter.style.color='var(--success)'; } else { el.btnUse.disabled=false; el.btnUse.style.opacity=0.6; el.btnUse.style.background='transparent'; el.counter.style.color='inherit'; } }
+
+    // logging & notification
+    function log(msg){ const d = new Date(); const t = d.toLocaleTimeString(); const div = document.createElement('div'); div.className='entry'; div.textContent = `[${t}] ${msg}`; logEl.prepend(div); }
+    function showNotification(txt){ notifText.textContent = txt; notif.classList.remove('hidden'); setTimeout(()=>{ notif.classList.add('hidden'); },4200); }
+    notifClose.addEventListener('click', ()=>{ notif.classList.add('hidden'); });
+    function checkNotify(r){ if(isSkillReady(r)){ showNotification(`${r.id} SKILL READY!`); log(`${r.id} SKILL READY pada R${state[r.id].round}`); }}
+
+    // global +1
+    document.getElementById('addGlobal').addEventListener('click', ()=>{ ROLES.forEach(r=>{ state[r.id].round+=1; state[r.id].used=false; }); save(); ROLES.forEach(updateCard); log('Global +1 pusingan (semua role)'); ROLES.forEach(checkNotify); });
+    document.getElementById('resetAll').addEventListener('click', ()=>{ if(!confirm('Reset semua pusingan ke 0?')) return; ROLES.forEach(r=>{ state[r.id].round=0; state[r.id].used=false; }); save(); ROLES.forEach(updateCard); log('Semua pusingan direset ke 0'); });
+
+    // export/import
+    document.getElementById('exportBtn').addEventListener('click', ()=>{ const data = JSON.stringify(state, null, 2); const blob = new Blob([data], {type:'application/json'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='uno-role-state.json'; a.click(); URL.revokeObjectURL(url); });
+
+    // init
+    load(); renderRoleList(); renderPusingan(); log('Aplikasi dimuat. Lobby sedia. State dimuat dari localStorage.');
+    setInterval(save, 3000);
+    // keyboard shortcut
+    window.addEventListener('keydown',(e)=>{ if(e.key.toLowerCase()==='g'){ document.getElementById('addGlobal').click(); } });
+
+  </script></body>
+</html>
